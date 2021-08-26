@@ -6,9 +6,10 @@ public class StartSide : MonoBehaviour
 {
     [SerializeField] Transform t_AnotherSide;
     [SerializeField] Transform t_Pedestrains;
+    [SerializeField] Color color;
 
-    static float sf_North => Terrain.sf_Wide - Terrain.sf_SaveGap;
-    static float sf_South = Terrain.sf_SaveGap;
+    static float sf_North => 5.0f;
+    static float sf_South => -5.0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,18 +20,23 @@ public class StartSide : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
 
-        while(true)
+        while (true)
         {
-            float randPos = Random.Range(sf_South, sf_North);
-            GameObject gobj = ModelPool.GetModel();
-            gobj.transform.SetParent(t_Pedestrains);
+            for (int i = 0; i <3; i++)
+            {
+                float randPos = Random.Range(sf_South, sf_North);
+                GameObject gobj = ModelPool.GetModel();
 
-            gobj.transform.position = new Vector3(transform.position.x, transform.position.y, randPos);
+                gobj.transform.SetParent(transform);
+                gobj.transform.localPosition = new Vector3(0, 0, randPos);
 
-            PedestrainHandler ph = gobj.GetComponent<PedestrainHandler>();
-            ph.SetTarget(t_AnotherSide);
+                gobj.transform.SetParent(t_Pedestrains);
 
-            yield return new WaitForSeconds(1);
+                PedestrainHandler ph = gobj.GetComponent<PedestrainHandler>();
+                ph.SetTarget(t_AnotherSide);
+                ph.image.color = color;
+            }
+            yield return new WaitForSeconds(6);
         }
     }
 }

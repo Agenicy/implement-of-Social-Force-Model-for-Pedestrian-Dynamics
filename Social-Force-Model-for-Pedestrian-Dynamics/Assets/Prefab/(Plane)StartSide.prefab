@@ -110,4 +110,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   t_AnotherSide: {fileID: 0}
-  t_Pedestrains: {fileID: 0}
+  t_Pedestrains: {fileID: 4833544290882441974, guid: 86a529f929045914cbe2b6eb9d56c4a6, type: 3}
