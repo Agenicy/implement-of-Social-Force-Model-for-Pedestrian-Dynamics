@@ -7,8 +7,8 @@ public class StartSide : MonoBehaviour
     [SerializeField] Transform t_AnotherSide;
     [SerializeField] Transform t_Pedestrains;
 
-    static float sf_North = 15;
-    static float sf_South = 1;
+    static float sf_North => Terrain.sf_Wide - Terrain.sf_SaveGap;
+    static float sf_South = Terrain.sf_SaveGap;
     // Start is called before the first frame update
     void Start()
     {
