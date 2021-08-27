@@ -187,6 +187,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 2372234705597023943}
   rigidbody_This: {fileID: 679947886225147242}
+  isDebug: 0
 --- !u!54 &679947886225147242
 Rigidbody:
   m_ObjectHideFlags: 0

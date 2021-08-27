@@ -219,7 +219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   terrain: {fileID: 220214874}
-  f_LengthSetting: 50
+  f_LengthSetting: 25
   f_WideSetting: 10
 --- !u!1 &358705512
 GameObject:
@@ -466,7 +466,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2426547686670817377, guid: 4f05c3e1a8071874796b0904091b6cc8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 16
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 2426547686670817377, guid: 4f05c3e1a8071874796b0904091b6cc8, type: 3}
       propertyPath: m_LocalPosition.y
@@ -806,7 +806,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3328767979940839880, guid: 1c85ac83c167ee443bc20ff664b0423e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 15
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 3328767979940839880, guid: 1c85ac83c167ee443bc20ff664b0423e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -901,7 +901,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3328767979940839880, guid: 1c85ac83c167ee443bc20ff664b0423e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3328767979940839880, guid: 1c85ac83c167ee443bc20ff664b0423e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -982,7 +982,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2426547686670817377, guid: 4f05c3e1a8071874796b0904091b6cc8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2426547686670817377, guid: 4f05c3e1a8071874796b0904091b6cc8, type: 3}
       propertyPath: m_LocalPosition.y

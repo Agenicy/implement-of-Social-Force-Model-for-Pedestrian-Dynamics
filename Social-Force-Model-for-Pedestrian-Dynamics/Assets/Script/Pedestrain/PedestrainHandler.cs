@@ -155,7 +155,7 @@ public partial class PedestrainHandler : MonoBehaviour
     IEnumerator IUpdate()
     {
         v3_Target = collider_Target.ClosestPointOnBounds(transform.position);
-        v3_SpeedReality = rigidbody_This.velocity = GetDesiredDirection();
+        v3_SpeedReality = rigidbody_This.velocity = GetDesiredDirection() * UnityEngine.Random.Range(0.9f, 1.1f);
         yield return new WaitForFixedUpdate();
         while (true)
         {
@@ -179,7 +179,7 @@ public partial class PedestrainHandler : MonoBehaviour
 
             Debug.DrawLine(old_next, old_next + force, Color.blue, sf_TDelta);
 
-            yield return new WaitForSeconds(sf_TDelta);
+            yield return new WaitForSeconds(sf_TDelta * UnityEngine.Random.Range(0.9f,1.1f));
         }
 
     }
@@ -187,7 +187,7 @@ public partial class PedestrainHandler : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         // End
-        if (collision.collider.gameObject.name == "(Plane)EndSide")
+        if (collision.collider == collider_Target)
         {
             StopAllCoroutines();
             ModelPool.Recycle(gameObject);
