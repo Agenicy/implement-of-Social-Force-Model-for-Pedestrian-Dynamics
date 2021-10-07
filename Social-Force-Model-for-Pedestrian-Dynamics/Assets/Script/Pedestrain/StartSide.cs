@@ -22,7 +22,7 @@ public class StartSide : MonoBehaviour
 
         while (true)
         {
-            for (int i = 0; i <3; i++)
+            for (int i = 0; i <1; i++)
             {
                 float randPos = Random.Range(sf_South, sf_North);
                 GameObject gobj = ModelPool.GetModel();
@@ -36,7 +36,7 @@ public class StartSide : MonoBehaviour
                 ph.SetTarget(t_AnotherSide);
                 ph.image.color = color;
             }
-            yield return new WaitForSeconds(6);
+            yield return new WaitForSeconds(Random.Range(2,3));
         }
     }
 }

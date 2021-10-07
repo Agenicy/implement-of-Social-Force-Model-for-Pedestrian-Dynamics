@@ -8,7 +8,7 @@ using UnityEngine.UI;
 static class BordersRepulsivePotential
 {
     static float Uab0 = 10f;
-    static float R = 0.2f;
+    static float R = 0.5f;
 
     public static Vector3 CountForce(Vector3 v3_Center, Vector3 point)
     {
@@ -39,10 +39,21 @@ public partial class PedestrainHandler : MonoBehaviour
 
     static List<PedestrainHandler> list_ped = new List<PedestrainHandler>();
 
+    static float Vab0 = 2.1f;
+    static float sigma = 0.3f;
+
     [SerializeField] bool isDebug = false;
 
     // 吸引力(暫不實作)
     // Dictionary<object, float> list_int_ThingsThatAttracted = new List<int>();
+
+    public static string Info =>
+        $"SpeedExpect(V_alpha) = {sf_SpeedExpect}\n" +
+        $"SpeedMax(V_alpha_max) = {sf_SpeedMax}\n" +
+        $"\n" +
+        $"Vab0 = {Vab0}\n" +
+        $"sigma = {sigma}\n" +
+        $"delta T = {sf_TDelta}";
 
     Vector3 GetDesiredDirection()
     {
@@ -75,7 +86,7 @@ public partial class PedestrainHandler : MonoBehaviour
     {
         Vector3 ret = (1 / sf_RelaxTime) * (sf_SpeedExpect * GetDesiredDirection() - v3_SpeedReality);
         ret = Quaternion.Euler(0, UnityEngine.Random.Range(-.5f, .5f), 0) * ret;
-        Debug.DrawLine(transform.position + v3_SpeedReality, transform.position + v3_SpeedReality + ret, Color.cyan, sf_TDelta);
+        //Debug.DrawLine(transform.position + v3_SpeedReality, transform.position + v3_SpeedReality + ret, Color.cyan, sf_TDelta);
         Debug.DrawLine(transform.position, transform.position + sf_SpeedExpect * GetDesiredDirection(), Color.magenta, sf_TDelta);
         return ret;
     }
@@ -91,8 +102,6 @@ public partial class PedestrainHandler : MonoBehaviour
 
         float b = (1 / 2f) * Mathf.Sqrt(Mathf.Pow(rAB.magnitude + (rAB - sBeta.magnitude * beta.GetDesiredDirection()).magnitude, 2) - Mathf.Pow(sBeta.magnitude, 2));
 
-        float Vab0 = 2.1f;
-        float sigma = 0.3f;
         // magnitude of force
         float mag = Vab0 * Mathf.Pow(Mathf.Exp(1), -b / sigma);
         Vector3 fAB = mag * ((transform.position - beta.transform.position) + (transform.position - (sBeta + beta.transform.position))) / 2f;
@@ -171,13 +180,13 @@ public partial class PedestrainHandler : MonoBehaviour
 
             v3_SpeedReality = rigidbody_This.velocity;
             if (v3_SpeedReality.magnitude > sf_SpeedMax)
-                v3_SpeedReality = rigidbody_This.velocity *= sf_SpeedMax / v3_SpeedReality.magnitude;
+                v3_SpeedReality = rigidbody_This.velocity = v3_SpeedReality * sf_SpeedMax / v3_SpeedReality.magnitude;
 
             transform.LookAt(transform.position + v3_SpeedReality);
 
-            Debug.DrawLine(transform.position, transform.position + v3_SpeedReality, Color.red, sf_TDelta);
+            // Debug.DrawLine(transform.position, transform.position + v3_SpeedReality, Color.red, sf_TDelta);
 
-            Debug.DrawLine(old_next, old_next + force, Color.blue, sf_TDelta);
+           // Debug.DrawLine(old_next, old_next + force, Color.blue, sf_TDelta);
 
             yield return new WaitForSeconds(sf_TDelta * UnityEngine.Random.Range(0.9f,1.1f));
         }
