@@ -14,7 +14,8 @@ static class BordersRepulsivePotential
     {
 
         // magnitude of force
-        float mag(Vector3 point) => Uab0 * Mathf.Pow(Mathf.Exp(1), -Vector3.Distance(nearestBorder.ClosestPointOnBounds(point), point) / R);
+
+        float mag(Vector3 point) => Uab0 * Mathf.Pow(Mathf.Exp(1), -Vector3.Distance(nearestBorder.ClosestPoint(point), point) / R);
 
         float delta = 1e-4f;
         Vector3 dx = new Vector3(delta, 0, 0);
@@ -26,6 +27,8 @@ static class BordersRepulsivePotential
         Vector3 grad = new Vector3(dvdx, 0, dvdy);
 
         return -1 * grad * v;
+        //float mag = Uab0* Mathf.Pow(Mathf.Exp(1), -Vector3.Distance(nearestBorder.ClosestPoint(point), point) / R);
+        //Vector3 dir = point - nearestBorder.ClosestPoint(point);
         //return dir * mag;
 
     }
@@ -147,7 +150,7 @@ public partial class PedestrainHandler : MonoBehaviour
                 (a, b) => Vector3.Distance(a.ClosestPointOnBounds(pt_here), pt_here) < Vector3.Distance(b.ClosestPointOnBounds(pt_here), pt_here) ? a : b);
         var force = BordersRepulsivePotential.CountForce(nearestBorder, pt_here);
 
-        Debug.DrawLine(transform.position, transform.position + force, Color.white, sf_TDelta);
+        Debug.DrawLine(transform.position, transform.position + force, Color.cyan, sf_TDelta);
         return force;
     }
 
