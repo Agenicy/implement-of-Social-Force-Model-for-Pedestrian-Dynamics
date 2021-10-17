@@ -11,7 +11,7 @@ public class TerrainHandler : MonoBehaviour
     public static float sf_Wide;
     public static float sf_SaveGap = 2;
 
-    public static float sf_TDelta = 1f;
+    public static float sf_TDelta = .2f;
     public static float sf_RelaxTime = .5f;
     public static float sf_PedstrainVision = 200f;
     public static float sf_PedstrainVision_OutsideRate = .5f;
@@ -43,6 +43,11 @@ public class TerrainHandler : MonoBehaviour
             $"PedstrainVision(2Phi) = {sf_PedstrainVision}\n" +
             $"PedstrainVision_OutsideRate = {sf_PedstrainVision_OutsideRate}\n" +
             PedestrainHandler.Info;
+
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+            Time.timeScale = 10;
+        else if (Input.GetKeyUp(KeyCode.LeftControl))
+            Time.timeScale = 1;
     }
 
     private void Reset()

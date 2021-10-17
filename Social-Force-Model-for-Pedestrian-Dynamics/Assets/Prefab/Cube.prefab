@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 3, y: 3}
+  m_SizeDelta: {x: 2, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1121116193118476064
 CanvasRenderer:
@@ -87,6 +87,7 @@ GameObject:
   - component: {fileID: 7277339430122089005}
   - component: {fileID: 8664689117515249867}
   - component: {fileID: 6644383191641035110}
+  - component: {fileID: 6050901223707301359}
   - component: {fileID: 3508170503910114946}
   - component: {fileID: 679947886225147242}
   m_Layer: 0
@@ -169,10 +170,24 @@ BoxCollider:
   m_GameObject: {fileID: 4866415477099193712}
   m_Material: {fileID: 13400000, guid: ec344c6ed4236254fa00189a5c8f7a28, type: 2}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!136 &6050901223707301359
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4866415477099193712}
+  m_Material: {fileID: 13400000, guid: ec344c6ed4236254fa00189a5c8f7a28, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1.1197042
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.059852123, z: 0}
 --- !u!114 &3508170503910114946
 MonoBehaviour:
   m_ObjectHideFlags: 0

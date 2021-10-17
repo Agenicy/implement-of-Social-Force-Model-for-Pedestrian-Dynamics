@@ -22,7 +22,7 @@ public class StartSide : MonoBehaviour
 
         while (true)
         {
-            for (int i = 0; i <1; i++)
+            for (int i = 0; i < 2; i++)
             {
                 float randPos = Random.Range(sf_South, sf_North);
                 GameObject gobj = ModelPool.GetModel();

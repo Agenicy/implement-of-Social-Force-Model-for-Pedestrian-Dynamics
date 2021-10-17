@@ -8,15 +8,25 @@ using UnityEngine.UI;
 static class BordersRepulsivePotential
 {
     static float Uab0 = 10f;
-    static float R = 0.5f;
+    static float R = 0.2f;
 
-    public static Vector3 CountForce(Vector3 v3_Center, Vector3 point)
+    public static Vector3 CountForce(Collider nearestBorder, Vector3 point)
     {
-        // magnitude of force
-        float mag = Uab0 * Mathf.Pow(Mathf.Exp(1), -Vector3.Distance(v3_Center, point) / R);
 
-        Vector3 dir = point - v3_Center;
-        return dir * mag;
+        // magnitude of force
+        float mag(Vector3 point) => Uab0 * Mathf.Pow(Mathf.Exp(1), -Vector3.Distance(nearestBorder.ClosestPointOnBounds(point), point) / R);
+
+        float delta = 1e-4f;
+        Vector3 dx = new Vector3(delta, 0, 0);
+        Vector3 dy = new Vector3(0, 0, delta);
+
+        float v = mag(point);
+        float dvdx = (mag(point + dx) - v) / delta;
+        float dvdy = (mag(point + dy) - v) / delta;
+        Vector3 grad = new Vector3(dvdx, 0, dvdy);
+
+        return -1 * grad * v;
+        //return dir * mag;
 
     }
 }
@@ -71,11 +81,11 @@ public partial class PedestrainHandler : MonoBehaviour
                 else
                     pedAccel += AwayFromOtherPedestrain(ped) * sf_PedstrainVision_OutsideRate;
         }
-        pedAccel = pedAccel.normalized;
+        // pedAccel = pedAccel.normalized;
         Debug.DrawLine(transform.position, transform.position + pedAccel, Color.yellow, sf_TDelta);
         Vector3 borderAccel = AwayFromBorder(BorderMarker.list_col_AllBorder);
         if (isDebug)
-            Debug.Log($"{v3_SpeedReality} / {selfAccel} {pedAccel} + {borderAccel}");
+            Debug.Log($"{v3_SpeedReality} / {selfAccel} + {pedAccel} + {borderAccel}");
         return selfAccel + pedAccel + borderAccel;
     }
 
@@ -96,18 +106,34 @@ public partial class PedestrainHandler : MonoBehaviour
     /// </summary>
     Vector3 AwayFromOtherPedestrain(PedestrainHandler beta)
     {
-        Vector3 sBeta = beta.v3_SpeedReality * sf_TDelta;
+        Vector3 sBeta = beta.v3_SpeedReality;
         Vector3 rAB = transform.position - beta.transform.position;
 
-
-        float b = (1 / 2f) * Mathf.Sqrt(Mathf.Pow(rAB.magnitude + (rAB - sBeta.magnitude * beta.GetDesiredDirection()).magnitude, 2) - Mathf.Pow(sBeta.magnitude, 2));
-
         // magnitude of force
-        float mag = Vab0 * Mathf.Pow(Mathf.Exp(1), -b / sigma);
-        Vector3 fAB = mag * ((transform.position - beta.transform.position) + (transform.position - (sBeta + beta.transform.position))) / 2f;
-        
-        if(fAB.magnitude > 1)
-            Debug.Log(fAB, beta.gameObject);
+        float value_rAB(Vector3 rAB, Vector3 sBeta, Vector3 dir)
+        {
+            float b = (1 / 2f) * Mathf.Sqrt(
+                Mathf.Pow(rAB.magnitude + (rAB - sBeta.magnitude * beta.GetDesiredDirection()).magnitude, 2)
+                - Mathf.Pow(sBeta.magnitude, 2)
+                );
+
+            return Vab0 * Mathf.Pow(Mathf.Exp(1), -b / sigma);
+        }
+
+        Vector3 dir = beta.v3_SpeedReality.normalized;
+
+        float delta = 1e-4f;
+        Vector3 dx = new Vector3(delta, 0, 0);
+        Vector3 dy = new Vector3(0, 0, delta);
+
+        float v = value_rAB(rAB, sBeta, dir);
+        float dvdx = (value_rAB(rAB + dx, sBeta, dir) - v) / delta;
+        float dvdy = (value_rAB(rAB + dy, sBeta, dir) - v) / delta;
+        Vector3 grad = new Vector3(dvdx, 0, dvdy);
+
+        // Vector3 fAB = mag * ((transform.position - beta.transform.position) + (transform.position - (sBeta + beta.transform.position))) / 2f;
+
+        Vector3 fAB = -1 * grad * v;
 
         return fAB;
     }
@@ -119,8 +145,7 @@ public partial class PedestrainHandler : MonoBehaviour
         var nearestBorder =
             list_col_Border.Aggregate(
                 (a, b) => Vector3.Distance(a.ClosestPointOnBounds(pt_here), pt_here) < Vector3.Distance(b.ClosestPointOnBounds(pt_here), pt_here) ? a : b);
-        var nearestPoint = nearestBorder.ClosestPointOnBounds(pt_here);
-        var force = BordersRepulsivePotential.CountForce(nearestPoint, pt_here);
+        var force = BordersRepulsivePotential.CountForce(nearestBorder, pt_here);
 
         Debug.DrawLine(transform.position, transform.position + force, Color.white, sf_TDelta);
         return force;
@@ -174,21 +199,22 @@ public partial class PedestrainHandler : MonoBehaviour
             v3_Target = collider_Target.ClosestPointOnBounds(transform.position);
 
             Vector3 force = GetTotalForce();
+            force += new Vector3(0, 0, 1) * UnityEngine.Random.Range(-0.1f, 0.1f);
             rigidbody_This.AddForce(force);
 
             yield return new WaitForFixedUpdate();
 
             v3_SpeedReality = rigidbody_This.velocity;
             if (v3_SpeedReality.magnitude > sf_SpeedMax)
-                v3_SpeedReality = rigidbody_This.velocity = v3_SpeedReality * sf_SpeedMax / v3_SpeedReality.magnitude;
+                v3_SpeedReality = rigidbody_This.velocity = sf_SpeedMax * v3_SpeedReality.normalized;
 
             transform.LookAt(transform.position + v3_SpeedReality);
 
             // Debug.DrawLine(transform.position, transform.position + v3_SpeedReality, Color.red, sf_TDelta);
 
-           // Debug.DrawLine(old_next, old_next + force, Color.blue, sf_TDelta);
+            // Debug.DrawLine(old_next, old_next + force, Color.blue, sf_TDelta);
 
-            yield return new WaitForSeconds(sf_TDelta * UnityEngine.Random.Range(0.9f,1.1f));
+            yield return new WaitForSeconds(sf_TDelta * UnityEngine.Random.Range(0.9f, 1.1f));
         }
 
     }
